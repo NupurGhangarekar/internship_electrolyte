@@ -51,7 +51,59 @@ internship-onboarding-portal/
       utils/
 ```
 
-## Setup
+## Environment Variables
+
+Backend `backend/.env.example`:
+
+```env
+PORT=
+MONGO_URI=
+JWT_SECRET=
+JWT_EXPIRES_IN=1d
+CLIENT_URL=
+ADMIN_NAME=
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+UPLOAD_DIR=uploads
+EMAIL_ENABLED=false
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
+SMTP_FROM=
+```
+
+Frontend `frontend/.env.example`:
+
+```env
+VITE_API_URL=
+```
+
+## Deployment
+
+Backend on Render:
+
+- Root directory: `backend`
+- Build command: `npm install`
+- Start command: `npm start`
+- Set `PORT`, `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_URL`, and any optional email settings in Render.
+- `MONGO_URI` must be a MongoDB Atlas connection string.
+- `CLIENT_URL` must be the deployed Vercel frontend URL.
+
+Frontend on Vercel:
+
+- Root directory: `frontend`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Set `VITE_API_URL` to the deployed Render backend URL.
+
+Database on MongoDB Atlas:
+
+- Create an Atlas cluster and database user.
+- Add the Render outbound access policy required by your Atlas network settings.
+- Store the Atlas connection string in Render as `MONGO_URI`.
+
+## Local Development
 
 1. Install dependencies:
 
@@ -65,14 +117,7 @@ npm run install:all
 cp backend/.env.example backend/.env
 ```
 
-Update `backend/.env` if needed:
-
-```env
-PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/internship_portal
-JWT_SECRET=replace_this_with_a_long_random_secret
-CLIENT_URL=http://localhost:5173
-```
+Fill every required value in `backend/.env`. Use a MongoDB Atlas URI for `MONGO_URI` and the frontend origin for `CLIENT_URL`.
 
 3. Create frontend environment file:
 
@@ -80,27 +125,22 @@ CLIENT_URL=http://localhost:5173
 cp frontend/.env.example frontend/.env
 ```
 
-4. Start MongoDB locally.
+Fill `VITE_API_URL` with the backend API URL.
 
-5. Seed demo data:
+4. Seed demo data:
 
 ```bash
 npm run seed
 ```
 
-Demo accounts:
+The admin account is created from `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`. The seed also creates sample intern accounts for development.
 
-- Admin: `admin@example.com` / `password123`
-- Intern: `aarav@example.com` / `password123`
-
-6. Run the app in two terminals:
+5. Run the app in two terminals:
 
 ```bash
 npm run dev:backend
 npm run dev:frontend
 ```
-
-Open `http://localhost:5173`.
 
 ## API Endpoints
 
@@ -141,7 +181,8 @@ Uploaded files are saved under `backend/uploads`. The storage concerns are isola
 
 - Replace `JWT_SECRET` with a long random value.
 - Use MongoDB Atlas or a managed MongoDB instance.
-- Set `CLIENT_URL` to the production frontend origin.
+- Set `CLIENT_URL` to the deployed frontend origin.
+- Set `VITE_API_URL` to the deployed backend API URL.
 - Put the API behind HTTPS.
 - Consider adding refresh tokens or token revocation for stricter logout semantics.
 - Enable `EMAIL_ENABLED=true` and configure SMTP for task assignment emails.
