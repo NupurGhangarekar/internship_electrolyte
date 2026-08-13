@@ -14,6 +14,7 @@ export default function AdminLayout() {
     ["Dashboard", "/admin"],
     ["Interns", "/admin/interns"],
     ["Projects", "/admin/projects"],
+    ["Board", "/admin/board"],
     ["Tasks", "/admin/tasks"],
     ["Calendar", "/admin/calendar"],
     ["Documents", "/admin/documents"],

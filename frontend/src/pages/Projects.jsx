@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/client";
 import EmptyState from "../components/EmptyState";
@@ -14,7 +15,7 @@ export default function Projects({ mode }) {
   const [interns, setInterns] = useState([]);
   const [form, setForm] = useState(blank);
   const [editing, setEditing] = useState(null);
-  const [selected, setSelected] = useState(null);
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({ search: "", status: "", priority: "" });
   const [meta, setMeta] = useState(null);
   const [page, setPage] = useState(1);
@@ -76,9 +77,9 @@ export default function Projects({ mode }) {
     load();
   };
 
-  const openDetails = async (id) => {
-    const res = await api.get(`/projects/${id}`);
-    setSelected(res.data);
+  const openDetails = (id) => {
+    const base = mode === "admin" ? "/admin" : "/intern";
+    navigate(`${base}/projects/${id}`);
   };
 
   return (
@@ -150,26 +151,7 @@ export default function Projects({ mode }) {
         <Pagination meta={meta} onPage={setPage} />
       </section>
 
-      {selected && (
-        <section className="card">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-semibold">{selected.project.name}</h2>
-              <p className="text-sm text-slate-500">{selected.project.description}</p>
-            </div>
-            <button className="text-sm text-slate-500" onClick={() => setSelected(null)}>Close</button>
-          </div>
-          <h3 className="mt-5 font-semibold">Project tasks</h3>
-          <div className="mt-3 grid gap-3">
-            {selected.tasks.length === 0 ? <EmptyState title="No tasks in this project" /> : selected.tasks.map((task) => (
-              <div key={task._id} className="rounded-md border border-slate-200 p-3 dark:border-slate-700">
-                <div className="flex items-center justify-between"><b>{task.title}</b><StatusBadge value={task.status} /></div>
-                <p className="mt-1 text-xs text-slate-500">Due {formatDate(task.dueDate)} - Progress {task.progress || 0}%</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      
     </div>
   );
 }

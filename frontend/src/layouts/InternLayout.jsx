@@ -13,6 +13,7 @@ export default function InternLayout() {
   const nav = [
     ["Dashboard", "/intern"],
     ["Projects", "/intern/projects"],
+    ["Board", "/intern/board"],
     ["My Tasks", "/intern/tasks"],
     ["Calendar", "/intern/calendar"],
     ["Documents", "/intern/documents"],

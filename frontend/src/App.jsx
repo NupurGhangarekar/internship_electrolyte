@@ -15,6 +15,8 @@ import AdminProfile from "./pages/AdminProfile";
 import InternProfile from "./pages/InternProfile";
 import Projects from "./pages/Projects";
 import Calendar from "./pages/Calendar";
+import ProjectDetails from "./pages/ProjectDetails";
+import KanbanBoard from "./pages/KanbanBoard";
 
 function ProtectedRoute({ role, children }) {
   const { isAuthenticated, user } = useAuth();
@@ -32,6 +34,8 @@ export default function App() {
         <Route index element={<AdminDashboard />} />
         <Route path="interns" element={<Interns />} />
         <Route path="projects" element={<Projects mode="admin" />} />
+        <Route path="projects/:id" element={<ProjectDetails mode="admin" />} />
+        <Route path="board" element={<KanbanBoard mode="admin" />} />
         <Route path="tasks" element={<AdminTasks />} />
         <Route path="calendar" element={<Calendar />} />
         <Route path="documents" element={<AdminDocuments />} />
@@ -40,6 +44,8 @@ export default function App() {
       <Route path="/intern" element={<ProtectedRoute role="intern"><InternLayout /></ProtectedRoute>}>
         <Route index element={<InternDashboard />} />
         <Route path="projects" element={<Projects mode="intern" />} />
+        <Route path="projects/:id" element={<ProjectDetails mode="intern" />} />
+        <Route path="board" element={<KanbanBoard mode="intern" />} />
         <Route path="tasks" element={<InternTasks />} />
         <Route path="calendar" element={<Calendar />} />
         <Route path="documents" element={<InternDocuments />} />
