@@ -19,7 +19,7 @@ export default function Interns() {
 
   const load = () => {
     setLoading(true);
-    api.get("/users", { params: { role: "intern", search, page } }).then((res) => {
+    api.get("/users", { params: { role: "intern", search, page, includeWorkload: true } }).then((res) => {
       setInterns(res.data);
       setMeta(res.meta);
     }).finally(() => setLoading(false));
@@ -75,8 +75,8 @@ export default function Interns() {
         {loading ? <Spinner /> : interns.length === 0 ? <EmptyState title="No interns found" /> : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead><tr><th className="table-th">Name</th><th className="table-th">Department</th><th className="table-th">Joining</th><th className="table-th">Actions</th></tr></thead>
-              <tbody>{interns.map((intern) => <tr key={intern._id} className="border-t border-slate-100 dark:border-slate-800"><td className="table-td"><b>{intern.name}</b><br /><span className="text-xs text-slate-500">{intern.email}</span></td><td className="table-td">{intern.department || "-"}</td><td className="table-td">{formatDate(intern.joiningDate)}</td><td className="table-td"><button className="mr-2 text-brand-600" onClick={() => edit(intern)}>Edit</button><button className="text-red-600" onClick={() => remove(intern._id)}>Delete</button></td></tr>)}</tbody>
+              <thead><tr><th className="table-th">Name</th><th className="table-th">Department</th><th className="table-th">Workload</th><th className="table-th">Joining</th><th className="table-th">Actions</th></tr></thead>
+              <tbody>{interns.map((intern) => <tr key={intern._id} className="border-t border-slate-100 dark:border-slate-800"><td className="table-td"><b>{intern.name}</b><br /><span className="text-xs text-slate-500">{intern.email}</span></td><td className="table-td">{intern.department || "-"}</td><td className="table-td"><div className="text-xs text-slate-500">Projects: <b>{intern.workload?.assignedProjects || 0}</b><br />Tasks: <b>{intern.workload?.assignedTasks || 0}</b> - Overdue: <b>{intern.workload?.overdueTasks || 0}</b></div></td><td className="table-td">{formatDate(intern.joiningDate)}</td><td className="table-td"><button className="mr-2 text-brand-600" onClick={() => edit(intern)}>Edit</button><button className="text-red-600" onClick={() => remove(intern._id)}>Delete</button></td></tr>)}</tbody>
             </table>
           </div>
         )}

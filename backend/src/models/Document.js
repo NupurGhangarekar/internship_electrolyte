@@ -4,7 +4,7 @@ const documentSchema = new mongoose.Schema({
   intern: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   type: {
     type: String,
-    enum: ["Certificate", "Letter of Recommendation", "Completion Certificate"],
+    enum: ["Certificate", "Letter of Recommendation", "Completion Certificate", "Other"],
     required: true
   },
   filename: { type: String, required: true },

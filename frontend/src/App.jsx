@@ -13,6 +13,8 @@ import AdminDocuments from "./pages/AdminDocuments";
 import InternDocuments from "./pages/InternDocuments";
 import AdminProfile from "./pages/AdminProfile";
 import InternProfile from "./pages/InternProfile";
+import Projects from "./pages/Projects";
+import Calendar from "./pages/Calendar";
 
 function ProtectedRoute({ role, children }) {
   const { isAuthenticated, user } = useAuth();
@@ -29,13 +31,17 @@ export default function App() {
       <Route path="/admin" element={<ProtectedRoute role="admin"><AdminLayout /></ProtectedRoute>}>
         <Route index element={<AdminDashboard />} />
         <Route path="interns" element={<Interns />} />
+        <Route path="projects" element={<Projects mode="admin" />} />
         <Route path="tasks" element={<AdminTasks />} />
+        <Route path="calendar" element={<Calendar />} />
         <Route path="documents" element={<AdminDocuments />} />
         <Route path="profile" element={<AdminProfile />} />
       </Route>
       <Route path="/intern" element={<ProtectedRoute role="intern"><InternLayout /></ProtectedRoute>}>
         <Route index element={<InternDashboard />} />
+        <Route path="projects" element={<Projects mode="intern" />} />
         <Route path="tasks" element={<InternTasks />} />
+        <Route path="calendar" element={<Calendar />} />
         <Route path="documents" element={<InternDocuments />} />
         <Route path="profile" element={<InternProfile />} />
       </Route>

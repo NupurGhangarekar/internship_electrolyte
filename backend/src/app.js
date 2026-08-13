@@ -10,6 +10,10 @@ const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const taskRoutes = require("./routes/task.routes");
 const documentRoutes = require("./routes/document.routes");
+const projectRoutes = require("./routes/project.routes");
+const notificationRoutes = require("./routes/notification.routes");
+const calendarRoutes = require("./routes/calendar.routes");
+const commentRoutes = require("./routes/comment.routes");
 const { notFound, errorHandler } = require("./middleware/error.middleware");
 const { validateEnv } = require("./config/env");
 
@@ -28,8 +32,12 @@ app.use("/uploads", express.static(path.join(process.cwd(), uploadDir)));
 app.get("/health", (_req, res) => res.json({ success: true, message: "API healthy" }));
 app.use("/", authRoutes);
 app.use("/users", userRoutes);
+app.use("/projects", projectRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/documents", documentRoutes);
+app.use("/comments", commentRoutes);
+app.use("/notifications", notificationRoutes);
+app.use("/calendar", calendarRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

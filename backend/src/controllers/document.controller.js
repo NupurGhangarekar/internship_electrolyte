@@ -42,6 +42,11 @@ const getDocuments = asyncHandler(async (req, res) => {
   sendSuccess(res, docs, "Documents fetched");
 });
 
+const getMyDocuments = asyncHandler(async (req, res) => {
+  const docs = await Document.find({ intern: req.user._id }).populate("uploadedBy", "name email").sort({ uploadDate: -1 });
+  sendSuccess(res, docs, "Documents fetched");
+});
+
 const deleteDocument = asyncHandler(async (req, res) => {
   const doc = await Document.findById(req.params.id);
   if (!doc) throw new AppError("Document not found", 404);
@@ -50,4 +55,4 @@ const deleteDocument = asyncHandler(async (req, res) => {
   sendSuccess(res, null, "Document deleted");
 });
 
-module.exports = { uploadDocument, getDocuments, deleteDocument };
+module.exports = { uploadDocument, getDocuments, getMyDocuments, deleteDocument };

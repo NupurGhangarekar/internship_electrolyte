@@ -1,13 +1,14 @@
 const User = require("../models/User");
 const Task = require("../models/Task");
 const Document = require("../models/Document");
+const Project = require("../models/Project");
 const AppError = require("../utils/AppError");
 const asyncHandler = require("../utils/asyncHandler");
 const { sendSuccess } = require("../utils/apiResponse");
 const { removeLocalFile } = require("../services/storage.service");
 
 const getUsers = asyncHandler(async (req, res) => {
-  const { search = "", role, page = 1, limit = 10 } = req.query;
+  const { search = "", role, page = 1, limit = 10, includeWorkload } = req.query;
   const filter = {};
   if (role) filter.role = role;
   if (search) filter.$or = [
@@ -17,10 +18,22 @@ const getUsers = asyncHandler(async (req, res) => {
   ];
 
   const skip = (Number(page) - 1) * Number(limit);
-  const [users, total] = await Promise.all([
+  let [users, total] = await Promise.all([
     User.find(filter).select("-password").sort({ createdAt: -1 }).skip(skip).limit(Number(limit)),
     User.countDocuments(filter)
   ]);
+  if (includeWorkload === "true") {
+    users = await Promise.all(users.map(async (user) => {
+      const [assignedProjects, assignedTasks, completedTasks, pendingTasks, overdueTasks] = await Promise.all([
+        Project.countDocuments({ assignedInterns: user._id, status: { $ne: "Archived" } }),
+        Task.countDocuments({ assignedTo: user._id }),
+        Task.countDocuments({ assignedTo: user._id, status: "Completed" }),
+        Task.countDocuments({ assignedTo: user._id, status: { $ne: "Completed" } }),
+        Task.countDocuments({ assignedTo: user._id, status: { $ne: "Completed" }, dueDate: { $lt: new Date() } })
+      ]);
+      return { ...user.toObject(), workload: { assignedProjects, assignedTasks, completedTasks, pendingTasks, overdueTasks } };
+    }));
+  }
   sendSuccess(res, users, "Users fetched", 200, { total, page: Number(page), pages: Math.ceil(total / Number(limit)) });
 });
 
@@ -54,6 +67,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   await Promise.all([
     Document.deleteMany({ intern: user._id }),
     Task.deleteMany({ assignedTo: user._id }),
+    Project.updateMany({ assignedInterns: user._id }, { $pull: { assignedInterns: user._id } }),
     user.deleteOne()
   ]);
   sendSuccess(res, null, "Intern deleted");

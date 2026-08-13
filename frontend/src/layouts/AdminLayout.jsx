@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Award, ClipboardList, FileText, LayoutDashboard, LogOut, Moon, Sun, User, Users } from "lucide-react";
+import { Award, CalendarDays, ClipboardList, FileText, FolderKanban, LayoutDashboard, LogOut, Moon, Sun, User, Users } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import NotificationPanel from "../components/NotificationPanel";
 
-const icons = { Dashboard: LayoutDashboard, Interns: Users, Tasks: ClipboardList, Documents: FileText, Profile: User };
+const icons = { Dashboard: LayoutDashboard, Interns: Users, Projects: FolderKanban, Tasks: ClipboardList, Calendar: CalendarDays, Documents: FileText, Profile: User };
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
@@ -12,7 +13,9 @@ export default function AdminLayout() {
   const nav = [
     ["Dashboard", "/admin"],
     ["Interns", "/admin/interns"],
+    ["Projects", "/admin/projects"],
     ["Tasks", "/admin/tasks"],
+    ["Calendar", "/admin/calendar"],
     ["Documents", "/admin/documents"],
     ["Profile", "/admin/profile"]
   ];
@@ -58,7 +61,10 @@ export default function AdminLayout() {
             <p className="text-sm text-slate-500">Welcome back,</p>
             <h1 className="text-2xl font-bold">{user?.name}</h1>
           </div>
-          <div className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-800 dark:bg-slate-900">{user?.email}</div>
+          <div className="flex items-center gap-3">
+            <NotificationPanel />
+            <div className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-800 dark:bg-slate-900">{user?.email}</div>
+          </div>
         </header>
         <Outlet />
       </main>

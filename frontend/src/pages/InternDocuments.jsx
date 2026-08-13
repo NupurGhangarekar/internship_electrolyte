@@ -12,9 +12,9 @@ export default function InternDocuments() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user?._id) {
+    if (user?.id || user?._id) {
       setLoading(true);
-      api.get(`/documents/${user._id}`)
+      api.get("/documents/me/list")
         .then((res) => setDocs(res.data))
         .finally(() => setLoading(false));
     }

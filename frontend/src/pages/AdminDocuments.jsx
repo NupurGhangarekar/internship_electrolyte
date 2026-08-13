@@ -66,6 +66,7 @@ export default function AdminDocuments() {
           <option>Certificate</option>
           <option>Letter of Recommendation</option>
           <option>Completion Certificate</option>
+          <option>Other</option>
         </select>
         <input className="input" type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={(e) => setFile(e.target.files[0])} />
         <button className="btn-primary">Upload or replace</button>

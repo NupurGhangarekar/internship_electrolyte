@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Award, ClipboardList, FileText, LayoutDashboard, LogOut, Moon, Sun, User } from "lucide-react";
+import { Award, CalendarDays, ClipboardList, FileText, FolderKanban, LayoutDashboard, LogOut, Moon, Sun, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import NotificationPanel from "../components/NotificationPanel";
 
-const icons = { Dashboard: LayoutDashboard, "My Tasks": ClipboardList, Documents: FileText, Profile: User };
+const icons = { Dashboard: LayoutDashboard, Projects: FolderKanban, "My Tasks": ClipboardList, Calendar: CalendarDays, Documents: FileText, Profile: User };
 
 export default function InternLayout() {
   const { user, logout } = useAuth();
@@ -11,7 +12,9 @@ export default function InternLayout() {
   const [dark, setDark] = useState(document.documentElement.classList.contains("dark"));
   const nav = [
     ["Dashboard", "/intern"],
+    ["Projects", "/intern/projects"],
     ["My Tasks", "/intern/tasks"],
+    ["Calendar", "/intern/calendar"],
     ["Documents", "/intern/documents"],
     ["Profile", "/intern/profile"]
   ];
@@ -57,7 +60,10 @@ export default function InternLayout() {
             <p className="text-sm text-slate-500">Welcome back,</p>
             <h1 className="text-2xl font-bold">{user?.name}</h1>
           </div>
-          <div className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-800 dark:bg-slate-900">{user?.email}</div>
+          <div className="flex items-center gap-3">
+            <NotificationPanel />
+            <div className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-800 dark:bg-slate-900">{user?.email}</div>
+          </div>
         </header>
         <Outlet />
       </main>

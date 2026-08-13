@@ -23,10 +23,19 @@ export default function InternDashboard() {
         <p className="mt-2 text-sm font-medium">{stats.progress}% progress</p>
       </section>
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard title="Assigned tasks" value={stats.assignedTasks} />
-        <StatCard title="Pending tasks" value={stats.pendingTasks} tone="amber" />
+        <StatCard title="My projects" value={stats.totalProjects} />
+        <StatCard title="My total tasks" value={stats.assignedTasks} />
+        <StatCard title="In progress" value={stats.inProgressTasks} tone="amber" />
         <StatCard title="Completed tasks" value={stats.completedTasks} tone="green" />
+        <StatCard title="Overdue tasks" value={stats.overdueTasks} tone="amber" />
+        <StatCard title="Due this week" value={stats.tasksDueThisWeek} tone="slate" />
       </div>
+      <section className="card">
+        <h3 className="font-semibold">Recent activity</h3>
+        <div className="mt-3 grid gap-2">
+          {(stats.recentActivity || []).length === 0 ? <p className="text-sm text-slate-500">No recent activity yet.</p> : stats.recentActivity.map((item) => <p key={item._id} className="rounded-md bg-slate-50 p-2 text-sm dark:bg-slate-800">{item.message}</p>)}
+        </div>
+      </section>
     </div>
   );
 }
