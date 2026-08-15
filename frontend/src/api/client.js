@@ -1,14 +1,18 @@
 import axios from "axios";
 
-export const API_URL = import.meta.env.VITE_API_URL;
+const getDefaultApiUrl = () => {
+  const configuredUrl = import.meta.env.VITE_API_URL;
+  if (configuredUrl) return configuredUrl;
+  if (typeof window !== "undefined") return window.location.origin;
+  return "http://localhost:5000";
+};
 
-if (!API_URL) {
-  throw new Error("Missing VITE_API_URL environment variable");
-}
+export const API_URL = getDefaultApiUrl();
 
 const api = axios.create({ baseURL: API_URL });
 
 api.interceptors.request.use((config) => {
+  if (typeof window === "undefined") return config;
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;

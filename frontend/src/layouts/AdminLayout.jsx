@@ -9,7 +9,7 @@ const icons = { Dashboard: LayoutDashboard, Interns: Users, Projects: FolderKanb
 export default function AdminLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [dark, setDark] = useState(document.documentElement.classList.contains("dark"));
+  const [dark, setDark] = useState(() => (typeof document !== "undefined" ? document.documentElement.classList.contains("dark") : false));
   const nav = [
     ["Dashboard", "/admin"],
     ["Interns", "/admin/interns"],

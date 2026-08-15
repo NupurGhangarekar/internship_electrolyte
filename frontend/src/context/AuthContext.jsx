@@ -4,13 +4,23 @@ import api from "../api/client";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user") || "null"));
+  const [token, setToken] = useState(() => (typeof window !== "undefined" ? localStorage.getItem("token") : null));
+  const [user, setUser] = useState(() => {
+    if (typeof window === "undefined") return null;
+    const storedUser = localStorage.getItem("user");
+    try {
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const login = async (credentials) => {
     const res = await api.post("/login", credentials);
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+    }
     setToken(res.data.token);
     setUser(res.data.user);
     return res.data.user;

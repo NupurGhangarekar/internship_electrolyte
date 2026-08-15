@@ -8,7 +8,7 @@ const icons = { Dashboard: LayoutDashboard, Interns: Users, Tasks: ClipboardList
 export default function DashboardLayout({ role }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [dark, setDark] = useState(document.documentElement.classList.contains("dark"));
+  const [dark, setDark] = useState(() => (typeof document !== "undefined" ? document.documentElement.classList.contains("dark") : false));
   const nav = role === "admin"
     ? [["Dashboard", "/admin"], ["Interns", "/admin/interns"], ["Tasks", "/admin/tasks"], ["Documents", "/admin/documents"]]
     : [["Dashboard", "/intern"], ["My Tasks", "/intern/tasks"], ["Documents", "/intern/documents"], ["Profile", "/intern/profile"]];

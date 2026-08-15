@@ -9,7 +9,7 @@ const icons = { Dashboard: LayoutDashboard, Projects: FolderKanban, "My Tasks": 
 export default function InternLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [dark, setDark] = useState(document.documentElement.classList.contains("dark"));
+  const [dark, setDark] = useState(() => (typeof document !== "undefined" ? document.documentElement.classList.contains("dark") : false));
   const nav = [
     ["Dashboard", "/intern"],
     ["Projects", "/intern/projects"],
