@@ -217,6 +217,7 @@ export default function TaskDetailModal({ taskId, onClose, onUpdated }) {
             </div>
           ) : null}
         </div>
+      </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <div>
