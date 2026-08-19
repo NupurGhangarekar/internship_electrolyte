@@ -20,9 +20,41 @@ const { validateEnv } = require("./config/env");
 validateEnv();
 const app = express();
 const uploadDir = process.env.UPLOAD_DIR || "uploads";
+const clientUrl = process.env.CLIENT_URL;
+const stableVercelDomain = "https://internshipelectrolytefinaldeployment.vercel.app";
+const vercelProjectPattern =
+  /^https:\/\/internshipelectrolytefinaldeployment-[a-z0-9-]+\.vercel\.app$/i;
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+
+  try {
+    const requestOrigin = new URL(origin).origin;
+
+    if (clientUrl && requestOrigin === new URL(clientUrl).origin) return true;
+    if (requestOrigin === stableVercelDomain) return true;
+    if (vercelProjectPattern.test(requestOrigin)) return true;
+
+    return false;
+  } catch {
+    return false;
+  }
+};
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || isAllowedOrigin(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
